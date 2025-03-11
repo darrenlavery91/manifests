@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flux
+  namespace: $namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flux
+  template:
+    metadata:
+      labels:
+        app: flux
+    spec:
+      containers:
+      - name: flux
+        image: fluxcd/flux-cli
+        ports:
+        - containerPort: 3030
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flux-service
+  namespace: $namespace
+spec:
+  selector:
+    app: flux
+  ports:
+    - protocol: TCP
+      port: 3030
+      targetPort: 3030
+  type: NodePort
